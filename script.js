@@ -27,6 +27,22 @@ const [database, setDatabase] = state([
 //Iniciando com um array vazio
 const [cart, setCart] = state([]);
 
+//Criando função que analisa o localStorage
+function cartDataAnalysis() {
+  //Acessando a chave "carrinho" no local storage
+  const cartLocalJSON = localStorage.getItem("carrinho");
+
+  //Verificando se cartLocalJSON não é null
+  if (cartLocalJSON) {
+    //Transformando JSON em dados JavaScript
+    const cartLocal = JSON.parse(cartLocalJSON);
+    //Atribuindo valor ao carrinho
+    return setCart(cartLocal);
+  }
+}
+//Chamando função em escopo global
+cartDataAnalysis();
+
 //Criando a função DOM dos produtos
 //Recebendo database() como parâmetro padrão
 function showProducts(products = database()) {
@@ -56,6 +72,13 @@ function addToCart(id, products = database()) {
   //atualizando o valor da const cart
   //usando a const setCart que possui a função setValue para atualizar o valor
   setCart([...cart(), productBuyed]);
+
+  //transformando array do carrinho em JSON
+  const productsJson = JSON.stringify(cart());
+
+  //Alocando array em JSON no local storage
+
+  localStorage.setItem("carrinho", productsJson);
 
   //chamando a função DOM responsável por mostrar os produtos no carrinho
   return showProductsInCart();
@@ -100,6 +123,13 @@ function removeToCart(id, products = cart()) {
 
   //Atualizando o valor da const cart
   setCart(newCartProducts);
+
+  //Transformando o array do carrinho em JSON
+  const productsJson = JSON.stringify(cart());
+
+  //Alocando array em JSON no local storage
+
+  localStorage.setItem("carrinho", productsJson);
 
   //Chamando a função DOM do carrinho para atualizar a página
   return showProductsInCart();
